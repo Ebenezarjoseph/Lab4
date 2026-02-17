@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript DOM Elements and Events Demo</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .intro { color: blue; }
+        #demo { background-color: #f0f0f0; padding: 10px; margin: 10px 0; }
+        input, button { margin: 5px; }
+    </style>
+</head>
+<body onload="onLoadHandler()">
+    <h1>JavaScript DOM Elements and Events</h1>
+
+    <div id="intro">This is the intro div.</div>
+    <p class="intro">This is a paragraph with class intro.</p>
+    <p>This is another paragraph.</p>
+    <p class="intro">Another paragraph with class intro.</p>
+
+    <div id="demo">Click anywhere on the document to change this text.</div>
+
+    <input type="text" id="inputField" placeholder="Type something">
+    <button id="changeButton">Change Intro Text</button>
+    <button id="tagButton">Highlight Paragraphs</button>
+    <button id="classButton">Highlight Intro Classes</button>
+    <button id="selectorButton">Highlight Selector Matches</button>
+
+    <form id="myForm">
+        <input type="text" name="name" placeholder="Name">
+        <input type="submit" value="Submit">
+    </form>
+
+    <div id="log"></div>
+
+    <script>
+        // Finding HTML Element by Id
+        var myElement = document.getElementById("intro");
+
+        // Finding HTML Elements by Tag Name
+        var paragraphs = document.getElementsByTagName("p");
+
+        // Finding HTML Elements by Class Name
+        var introElements = document.getElementsByClassName("intro");
+
+        // Finding HTML Elements by CSS Selectors
+        var selectorElements = document.querySelectorAll("p.intro");
+
+        // Attach event handler to the document
+        document.addEventListener("click", function() {
+            document.getElementById("demo").innerHTML = "Karunya";
+        });
+
+        // onload event
+        function onLoadHandler() {
+            logEvent("Document loaded");
+        }
+
+        // onclick on button
+        document.getElementById("changeButton").addEventListener("click", function() {
+            myElement.innerHTML = "Intro text changed!";
+            logEvent("Intro text changed via button click");
+        });
+
+        // onclick on another button
+        document.getElementById("tagButton").addEventListener("click", function() {
+            for (var i = 0; i < paragraphs.length; i++) {
+                paragraphs[i].style.backgroundColor = "yellow";
+            }
+            logEvent("Paragraphs highlighted");
+        });
+
+        // onclick on class button
+        document.getElementById("classButton").addEventListener("click", function() {
+            for (var i = 0; i < introElements.length; i++) {
+                introElements[i].style.fontWeight = "bold";
+            }
+            logEvent("Intro elements bolded");
+        });
+
+        // onclick on selector button
+        document.getElementById("selectorButton").addEventListener("click", function() {
+            for (var i = 0; i < selectorElements.length; i++) {
+                selectorElements[i].style.textDecoration = "underline";
+            }
+            logEvent("Selector matches underlined");
+        });
+
+        // onchange on input
+        document.getElementById("inputField").addEventListener("change", function() {
+            logEvent("Input changed to: " + this.value);
+        });
+
+        // onkeyup on input
+        document.getElementById("inputField").addEventListener("keyup", function() {
+            logEvent("Key up: " + this.value);
+        });
+
+        // onkeydown on input
+        document.getElementById("inputField").addEventListener("keydown", function() {
+            logEvent("Key down");
+        });
+
+        // onmouseover on demo div
+        document.getElementById("demo").addEventListener("mouseover", function() {
+            this.style.backgroundColor = "lightblue";
+            logEvent("Mouse over demo");
+        });
+
+        // onmousedown on demo div
+        document.getElementById("demo").addEventListener("mousedown", function() {
+            this.style.backgroundColor = "lightgreen";
+            logEvent("Mouse down on demo");
+        });
+
+        // onsubmit on form
+        document.getElementById("myForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            logEvent("Form submitted");
+        });
+
+        function logEvent(message) {
+            var logDiv = document.getElementById("log");
+            logDiv.innerHTML += "<p>" + message + "</p>";
+        }
+    </script>
+</body>
+</html>
