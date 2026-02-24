@@ -2,128 +2,115 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Bank Loan EMI Calculator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JavaScript DOM Elements and Events Demo</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .intro { color: blue; }
-        #demo { background-color: #f0f0f0; padding: 10px; margin: 10px 0; }
-        input, button { margin: 5px; }
-    </style>
+
+    <!-- Bootstrap CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body onload="onLoadHandler()">
-    <h1>JavaScript DOM Elements and Events</h1>
+<body class="bg-light">
 
-    <div id="intro">This is the intro div.</div>
-    <p class="intro">This is a paragraph with class intro.</p>
-    <p>This is another paragraph.</p>
-    <p class="intro">Another paragraph with class intro.</p>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="#">Bank EMI Calculator</a>
+    </div>
+</nav>
 
-    <div id="demo">Click anywhere on the document to change this text.</div>
+<div class="container my-5">
 
-    <input type="text" id="inputField" placeholder="Type something">
-    <button id="changeButton">Change Intro Text</button>
-    <button id="tagButton">Highlight Paragraphs</button>
-    <button id="classButton">Highlight Intro Classes</button>
-    <button id="selectorButton">Highlight Selector Matches</button>
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-12">
 
-    <form id="myForm">
-        <input type="text" name="name" placeholder="Name">
-        <input type="submit" value="Submit">
-    </form>
+            <div class="card shadow">
+                <div class="card-body">
 
-    <div id="log"></div>
+                    <h3 class="text-center text-primary mb-4">
+                        Loan EMI Calculator
+                    </h3>
 
-    <script>
-        // Finding HTML Element by Id
-        var myElement = document.getElementById("intro");
+                    <!-- Loan Amount -->
+                    <div class="mb-3">
+                        <label class="form-label">Loan Amount (₹)</label>
+                        <input type="number" id="loanAmount" class="form-control" required>
+                    </div>
 
-        // Finding HTML Elements by Tag Name
-        var paragraphs = document.getElementsByTagName("p");
+                    <!-- Interest Rate -->
+                    <div class="mb-3">
+                        <label class="form-label">Annual Interest Rate (%)</label>
+                        <input type="number" id="interestRate" class="form-control" required>
+                    </div>
 
-        // Finding HTML Elements by Class Name
-        var introElements = document.getElementsByClassName("intro");
+                    <!-- Tenure -->
+                    <div class="mb-3">
+                        <label class="form-label">Tenure (Months)</label>
+                        <input type="number" id="tenure" class="form-control" required>
+                    </div>
 
-        // Finding HTML Elements by CSS Selectors
-        var selectorElements = document.querySelectorAll("p.intro");
+                    <!-- Buttons -->
+                    <div class="d-grid gap-2">
+                        <button onclick="calculateEMI()" class="btn btn-primary">
+                            Calculate EMI
+                        </button>
+                        <button onclick="resetFields()" class="btn btn-secondary">
+                            Reset
+                        </button>
+                    </div>
 
-        // Attach event handler to the document
-        document.addEventListener("click", function() {
-            document.getElementById("demo").innerHTML = "Karunya";
-        });
+                    <!-- Result -->
+                    <div class="alert alert-success mt-4 text-center" id="result" style="display:none;">
+                        <h5 id="emiOutput"></h5>
+                        <p id="totalPayment"></p>
+                        <p id="totalInterest"></p>
+                    </div>
 
-        // onload event
-        function onLoadHandler() {
-            logEvent("Document loaded");
-        }
+                </div>
+            </div>
 
-        // onclick on button
-        document.getElementById("changeButton").addEventListener("click", function() {
-            myElement.innerHTML = "Intro text changed!";
-            logEvent("Intro text changed via button click");
-        });
+        </div>
+    </div>
 
-        // onclick on another button
-        document.getElementById("tagButton").addEventListener("click", function() {
-            for (var i = 0; i < paragraphs.length; i++) {
-                paragraphs[i].style.backgroundColor = "yellow";
-            }
-            logEvent("Paragraphs highlighted");
-        });
+</div>
 
-        // onclick on class button
-        document.getElementById("classButton").addEventListener("click", function() {
-            for (var i = 0; i < introElements.length; i++) {
-                introElements[i].style.fontWeight = "bold";
-            }
-            logEvent("Intro elements bolded");
-        });
+<!-- JavaScript -->
+<script>
+function calculateEMI() {
 
-        // onclick on selector button
-        document.getElementById("selectorButton").addEventListener("click", function() {
-            for (var i = 0; i < selectorElements.length; i++) {
-                selectorElements[i].style.textDecoration = "underline";
-            }
-            logEvent("Selector matches underlined");
-        });
+    let P = parseFloat(document.getElementById("loanAmount").value);
+    let annualRate = parseFloat(document.getElementById("interestRate").value);
+    let N = parseFloat(document.getElementById("tenure").value);
 
-        // onchange on input
-        document.getElementById("inputField").addEventListener("change", function() {
-            logEvent("Input changed to: " + this.value);
-        });
+    if (P <= 0 || annualRate <= 0 || N <= 0) {
+        alert("Please enter valid positive values.");
+        return;
+    }
 
-        // onkeyup on input
-        document.getElementById("inputField").addEventListener("keyup", function() {
-            logEvent("Key up: " + this.value);
-        });
+    let R = annualRate / 12 / 100; // Monthly Interest Rate
 
-        // onkeydown on input
-        document.getElementById("inputField").addEventListener("keydown", function() {
-            logEvent("Key down");
-        });
+    let EMI = (P * R * Math.pow(1 + R, N)) /
+              (Math.pow(1 + R, N) - 1);
 
-        // onmouseover on demo div
-        document.getElementById("demo").addEventListener("mouseover", function() {
-            this.style.backgroundColor = "lightblue";
-            logEvent("Mouse over demo");
-        });
+    let totalPayment = EMI * N;
+    let totalInterest = totalPayment - P;
 
-        // onmousedown on demo div
-        document.getElementById("demo").addEventListener("mousedown", function() {
-            this.style.backgroundColor = "lightgreen";
-            logEvent("Mouse down on demo");
-        });
+    document.getElementById("result").style.display = "block";
+    document.getElementById("emiOutput").innerHTML =
+        "Monthly EMI: ₹ " + EMI.toFixed(2);
 
-        // onsubmit on form
-        document.getElementById("myForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            logEvent("Form submitted");
-        });
+    document.getElementById("totalPayment").innerHTML =
+        "Total Payment: ₹ " + totalPayment.toFixed(2);
 
-        function logEvent(message) {
-            var logDiv = document.getElementById("log");
-            logDiv.innerHTML += "<p>" + message + "</p>";
-        }
-    </script>
+    document.getElementById("totalInterest").innerHTML =
+        "Total Interest: ₹ " + totalInterest.toFixed(2);
+}
+
+function resetFields() {
+    document.getElementById("loanAmount").value = "";
+    document.getElementById("interestRate").value = "";
+    document.getElementById("tenure").value = "";
+    document.getElementById("result").style.display = "none";
+}
+</script>
+
 </body>
 </html>
